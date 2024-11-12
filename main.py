@@ -1,38 +1,45 @@
 from datetime import datetime
+import time
 
 # Getting the time now
 time_now = datetime.now()
 
-# Getting the hour and minute
-hour = time_now.hour
-minute = time_now.minute
-seconds = time_now.second
-
 # User input for the time they want to go home
-home_hour = int(input("What time do you want to go home? (hour): "))
-home_minute = int(input("What time do you want to go home? (minute): "))
-home_seconds = int(input("What time do you want to go home? (seconds): "))
+home_hour, home_minute, home_second = map(int, input("Enter the time you want to go home (hour minute second): ").split())
+if home_hour >= 24:
+    print("Please enter a valid value for hour")
+    exit()
+elif home_minute >= 60:
+    print("Please enter a valid value for minute")
+    exit()
+elif home_second >= 60:
+    print("Please enter a valid value for second")
+    exit()
 
-def calculate_home():
-    # Calculate hours and minutes until home
-    until_home_hour = home_hour - hour
-    until_home_minute = home_minute - minute
-    until_home_seconds = home_seconds - seconds
 
-    # Adjust if minutes are negative
-    if until_home_minute < 0:
-        until_home_minute += 60
-        until_home_hour -= 1
+# Calculate the target time
+home_time = time_now.replace(hour=home_hour, minute=home_minute, second=home_second, microsecond=0)
 
-    if until_home_seconds < 0:
-        until_home_seconds += 60
-        until_home_minute -= 1
+def countdown():
+    while True:
+        # Calculate the remaining time
+        time_now = datetime.now()
+        time_left = home_time - time_now
 
-    return print(f"It is sadly {until_home_hour} {'hours' if until_home_hour > 1 else 'hour'}, "
-                 f"{until_home_minute} {'minutes' if until_home_minute > 1 else 'minute'} "
-                 f"{f'and {until_home_seconds} seconds' if until_home_seconds > 1 else f'and {until_home_seconds} second'}"
-                 f" until home :-(")
+        # Break the loop if time is up
+        if time_left.total_seconds() <= 0:
+            print("\nHeimat :-)")
+            break
 
+        # Extract hours, minutes, and seconds
+        hours, remainder = divmod(time_left.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        # Print the remaining time
+        print(f"\rTid til hjem :-( : {hours:02}h:{minutes:02}m:{seconds:02}s", end="")
+
+        # Wait for 1 second
+        time.sleep(1)
 
 print()
-calculate_home()
+countdown()
