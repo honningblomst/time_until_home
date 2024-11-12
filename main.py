@@ -28,9 +28,11 @@ def calculate_home():
         until_home_seconds += 60
         until_home_minute -= 1
 
-    # Print the result
-    return print(f"It is sadly {until_home_hour} hours, {until_home_minute:02} minutes"
-                 f" and {until_home_seconds} seconds until home :-(")
+    return print(f"It is sadly {until_home_hour} {'hours' if until_home_hour > 1 else 'hour'}, "
+                 f"{until_home_minute} {'minutes' if until_home_minute > 1 else 'minute'} "
+                 f"{f'and {until_home_seconds} seconds' if until_home_seconds > 1 else f'and {until_home_seconds} second'}"
+                 f" until home :-(")
+
 
 print()
 calculate_home()
